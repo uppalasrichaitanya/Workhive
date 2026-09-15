@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">Workhive monochrome mark</title>
+  <desc id="desc">A single-color honeycomb cluster with a negative space W.</desc>
+  <defs><mask id="workhive-mono-w"><rect width="64" height="64" fill="black"/><g fill="white"><path d="M32 4 46 12v16L32 36 18 28V12z"/><path d="M14 18 28 26v16L14 50 0 42V26z"/><path d="M50 18 64 26v16L50 50 36 42V26z"/><path d="M32 28 46 36v16L32 60 18 52V36z"/></g><path d="M10 24 20 43 29 27 38 43 48 24" fill="none" stroke="black" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter"/></mask></defs>
+  <g mask="url(#workhive-mono-w)" fill="#20252B"><path d="M32 4 46 12v16L32 36 18 28V12z"/><path d="M14 18 28 26v16L14 50 0 42V26z"/><path d="M50 18 64 26v16L50 50 36 42V26z"/><path d="M32 28 46 36v16L32 60 18 52V36z"/></g>
+</svg>
