@@ -55,15 +55,29 @@ The normalizer accepts common field aliases:
 }
 ```
 
-`jobId`, `id`, `applyUrl`, `canonicalUrl`, `companyName`, `jobDescription`, `jobType`, `isRemote`, `datePosted`, arrays of locations, and a free-form `salary` string are also supported. The original record is stored in `rawPayload`.
+`jobId`, `id`, `applyUrl`, `canonicalUrl`, `companyName`, `organization`, `jobDescription`, `description_text`, `jobType`, `employment_type`, `isRemote`, `remote_derived`, `datePosted`, `date_posted`, structured or derived location arrays, Apify AI salary fields, and a free-form salary string are also supported. The original record is stored in `rawPayload`.
 
 ## Apify
 
-Keep the actor ID in `APIFY_ACTOR_ID`; no community actor is hardcoded. Configure the actor to return 20–50 India technology/startup listings in the format above. Create a webhook for the dataset or run completion event pointing to:
+Keep the actor ID in `APIFY_ACTOR_ID`; no community actor is hardcoded. Configure the actor to return 20-50 India technology/startup listings in the format above. Create a webhook for the dataset or run completion event pointing to:
 
 `POST https://your-app.example.com/api/ingest/apify?secret=...`
 
 The first production check should inspect duplicate rate, stale listings, missing fields, and Apify credit usage before adding more sources. Apify is used for scheduled collection only; it is not a request-time search dependency.
+
+### Collection check completed on 16 September 2026
+
+Three public-ATS collection runs were imported into Supabase:
+
+| Dataset | Items | Inserted | Existing/updated | Rejected |
+| --- | ---: | ---: | ---: | ---: |
+| Greenhouse | 200 | 200 | 0 | 0 |
+| Lever | 200 | 199 | 1 | 0 |
+| Multi-ATS (Greenhouse, Lever, Ashby) | 200 | 194 | 6 | 0 |
+
+The combined database contains 593 active jobs and 593 unique canonical URLs. Missing descriptions, locations, and posted dates are all zero; no listing was stale at import time. Across the two added datasets, 7 of 400 items matched an existing canonical URL or content identity, a 1.75% duplicate/update rate. The final source mix is 356 Greenhouse, 208 Lever, and 29 Ashby listings.
+
+Apify credit usage must be read from the Apify account usage page because dataset output does not expose billing totals. Record that number alongside future run-quality checks before increasing crawl volume.
 
 ## Supported public sources
 
