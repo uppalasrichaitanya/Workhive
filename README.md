@@ -77,7 +77,7 @@ Three public-ATS collection runs were imported into Supabase:
 
 The combined database contains 593 active jobs and 593 unique canonical URLs. Missing descriptions, locations, and posted dates are all zero; no listing was stale at import time. Across the two added datasets, 7 of 400 items matched an existing canonical URL or content identity, a 1.75% duplicate/update rate. The final source mix is 356 Greenhouse, 208 Lever, and 29 Ashby listings.
 
-Apify credit usage must be read from the Apify account usage page because dataset output does not expose billing totals. Record that number alongside future run-quality checks before increasing crawl volume.
+Apify run metadata reported USD 0.40 for Greenhouse, USD 0.50 for Lever, and USD 0.0048 for the multi-ATS actor: USD 0.9048 total, about USD 0.00151 per collected item. Pricing differs by actor, so record `usageTotalUsd` and item count for every future trial before increasing crawl volume.
 
 ## Supported public sources
 
