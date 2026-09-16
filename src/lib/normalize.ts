@@ -12,9 +12,13 @@ export const incomingJobSchema = z.object({
   title: z.string().min(2),
   company: z.string().min(1).optional(),
   companyName: z.string().min(1).optional(),
+  organization: z.string().min(1).optional(),
   location: z.union([z.string(), z.array(z.string())]).optional(),
+  locations_derived: z.array(z.string()).optional(),
+  locations_alt: z.array(z.string()).optional(),
   description: z.string().optional(),
   jobDescription: z.string().optional(),
+  description_text: z.string().optional(),
   employmentType: z.string().optional(),
   jobType: z.string().optional(),
   remote: z.union([z.boolean(), z.string()]).optional(),
@@ -23,8 +27,12 @@ export const incomingJobSchema = z.object({
   salaryMax: z.number().optional(),
   salary: z.string().optional(),
   salaryCurrency: z.string().optional(),
+  ai_salary_currency: z.string().optional(),
+  ai_salary_min_value: z.number().optional(),
+  ai_salary_max_value: z.number().optional(),
   postedAt: z.union([z.string(), z.date()]).optional(),
   datePosted: z.union([z.string(), z.date()]).optional(),
+  date_posted: z.union([z.string(), z.date()]).optional(),
 }).passthrough();
 
 export type IncomingJob = z.infer<typeof incomingJobSchema>;
@@ -50,13 +58,14 @@ export function normalizeJob(payload: unknown, source = "apify") {
   const item = incomingJobSchema.parse(payload);
   const canonicalUrl = item.canonicalUrl ?? item.applyUrl ?? item.url;
   if (!canonicalUrl) throw new Error("Job is missing a canonical URL");
-  const location = Array.isArray(item.location) ? item.location.join(", ") : item.location ?? "India";
+  const sourceLocation = item.location ?? item.locations_derived ?? item.locations_alt;
+  const location = Array.isArray(sourceLocation) ? sourceLocation.join(", ") : sourceLocation ?? "India";
   const salary = parseSalary(item.salary);
   const title = item.title.trim();
-  const company = (item.company ?? item.companyName ?? "Unknown company").trim();
-  const description = (item.description ?? item.jobDescription ?? "").trim();
+  const company = (item.company ?? item.companyName ?? item.organization ?? "Unknown company").trim();
+  const description = (item.description ?? item.description_text ?? item.jobDescription ?? "").trim();
   const contentHash = createHash("sha256").update(`${title}|${company}|${location}|${description}`).digest("hex");
-  const posted = item.postedAt ?? item.datePosted;
+  const posted = item.postedAt ?? item.datePosted ?? item.date_posted;
   return {
     source,
     sourceJobId: item.sourceJobId ?? item.jobId ?? item.id ?? null,
@@ -67,9 +76,9 @@ export function normalizeJob(payload: unknown, source = "apify") {
     description,
     employmentType: item.employmentType ?? item.jobType ?? null,
     remote: truthy(item.remote ?? item.isRemote) || /remote/i.test(location),
-    salaryMin: item.salaryMin ?? salary.min ?? null,
-    salaryMax: item.salaryMax ?? salary.max ?? null,
-    salaryCurrency: item.salaryCurrency ?? salary.currency ?? null,
+    salaryMin: item.salaryMin ?? item.ai_salary_min_value ?? salary.min ?? null,
+    salaryMax: item.salaryMax ?? item.ai_salary_max_value ?? salary.max ?? null,
+    salaryCurrency: item.salaryCurrency ?? item.ai_salary_currency ?? salary.currency ?? null,
     postedAt: posted ? new Date(posted) : null,
     contentHash,
     rawPayload: payload,
