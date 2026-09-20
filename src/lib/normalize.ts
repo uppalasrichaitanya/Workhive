@@ -50,6 +50,12 @@ function truthy(value: unknown) {
   return value === true || ["true", "yes", "remote", "fully remote"].includes(String(value).toLowerCase());
 }
 
+const explicitNonIndiaPattern = /\b(?:united states|u\.s\.a?\.?|usa|canada|australia|united kingdom|england|germany|france|singapore|indiana|illinois|indianapolis|chicago|texas|california|new york|massachusetts|washington|florida|ohio|georgia|colorado|virginia|oregon|pennsylvania|maryland)\b/i;
+
+export function isExplicitlyNonIndiaLocation(location: string) {
+  return explicitNonIndiaPattern.test(location);
+}
+
 function rawLocation(value: unknown) {
   if (!Array.isArray(value)) return "";
   return value.map((entry) => {

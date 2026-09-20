@@ -75,7 +75,7 @@ Three public-ATS collection runs were imported into Supabase:
 | Lever | 200 | 199 | 1 | 0 |
 | Multi-ATS (Greenhouse, Lever, Ashby) | 200 | 194 | 6 | 0 |
 
-The combined database contains 593 active jobs and 593 unique canonical URLs. Missing descriptions, locations, and posted dates are all zero; no listing was stale at import time. Across the two added datasets, 7 of 400 items matched an existing canonical URL or content identity, a 1.75% duplicate/update rate. The final source mix is 356 Greenhouse, 208 Lever, and 29 Ashby listings.
+The database contains 568 active India-focused jobs from 593 unique imported URLs. Twenty-five Greenhouse records with explicit United States locations were excluded from active search results. Missing descriptions, locations, and posted dates are all zero among the imported records; no listing was stale at import time. Across the two added datasets, 7 of 400 items matched an existing canonical URL or content identity, a 1.75% duplicate/update rate. The final source mix is 356 Greenhouse, 208 Lever, and 29 Ashby listings.
 
 Apify run metadata reported USD 0.40 for Greenhouse, USD 0.50 for Lever, and USD 0.0048 for the multi-ATS actor: USD 0.9048 total, about USD 0.00151 per collected item. Pricing differs by actor, so record `usageTotalUsd` and item count for every future trial before increasing crawl volume.
 

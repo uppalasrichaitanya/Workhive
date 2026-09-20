@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { duplicateKeys, incomingJobSchema, normalizeJob } from "./normalize";
+import { duplicateKeys, incomingJobSchema, isExplicitlyNonIndiaLocation, normalizeJob } from "./normalize";
 import { filterJobs, isFresh } from "./filters";
 import { demoJobs } from "./demo-data";
 
@@ -50,6 +50,13 @@ describe("job normalization", () => {
     expect(duplicateKeys(job)).toContain("Greenhouse:1"); expect(duplicateKeys(job)).toContain(job.contentHash);
   });
   it("rejects records without a valid title", () => { expect(() => incomingJobSchema.parse({ url: "https://example.com/a" })).toThrow(); });
+  it("flags explicit non-India locations", () => {
+    expect(isExplicitlyNonIndiaLocation("Indianapolis, Indiana, United States")).toBe(true);
+    expect(isExplicitlyNonIndiaLocation("Indianapolis, IN")).toBe(true);
+    expect(isExplicitlyNonIndiaLocation("Chicago, Illinois; Indiana")).toBe(true);
+    expect(isExplicitlyNonIndiaLocation("Bengaluru, Karnataka, India")).toBe(false);
+    expect(isExplicitlyNonIndiaLocation("Remote")).toBe(false);
+  });
 });
 describe("job filtering and freshness", () => {
   it("filters by search, location, and remote status", () => { expect(filterJobs(demoJobs, { q: "backend", location: "India", remote: "true" })).toHaveLength(1); expect(filterJobs(demoJobs, { company: "Kite Health" })).toHaveLength(1); });

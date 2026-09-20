@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { ingestionRuns, jobs } from "@/db/schema";
-import { normalizeJob, duplicateKeys } from "@/lib/normalize";
+import { normalizeJob, duplicateKeys, isExplicitlyNonIndiaLocation } from "@/lib/normalize";
 
 function authorized(request: NextRequest) {
   const expected = process.env.APIFY_WEBHOOK_SECRET;
@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
     for (const raw of items) {
       try {
         const normalized = normalizeJob(raw, source);
+        if (isExplicitlyNonIndiaLocation(normalized.location)) throw new Error("Listing has an explicit non-India location");
         const keys = duplicateKeys(normalized);
         const match = existing.find((item) => keys.includes(item.canonicalUrl) || keys.includes(item.contentHash) || (item.sourceJobId && keys.includes(`${item.source}:${item.sourceJobId}`)));
         const now = new Date();
